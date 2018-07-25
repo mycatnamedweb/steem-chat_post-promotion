@@ -16,6 +16,7 @@ const chatMsg = `{message}
 {link}`;
 let promotedLink = '';
 let timeoutRis = 0;
+let lastCommentTs = new Date().getTime(); // initialized in case link changed straight away
 
 
 // utils
@@ -62,6 +63,7 @@ async function addComment() {
     'div[class="rc-message-box__icon rc-message-box__send js-send"]'
   )[0];
   submitBtn.click();
+  lastCommentTs = new Date().getTime();
   console.log(`${now()} -- Commented.`);
   await sleep(5000);
 }
@@ -93,6 +95,7 @@ async function periodicallyCommentOnSteemChat() {
 
 
 // startup
+
 if (window.location.href.indexOf('steem.chat') === -1) {
   alert(`You gotta execute this link on a https://steem.chat domain!`);
   throw 'NOT_ON_STEEM_CHAT';
@@ -119,7 +122,9 @@ const changeLink = (link, newIntro) => {
     throw new Error('NO_LINK');
   }
   clearTimeout(timeoutRis);
-  startWithLink(link, 0, newIntro);
+  const remainingDelay = (2 * 60 * 60 * 1000) - (new Date().getTime() - lastCommentTs);
+  console.log(`Your new link ${link} will be posted in ${remainingDelay / 1000 / 60} mins`);
+  startWithLink(link, remainingDelay, newIntro);
 }
 
 let githubW;
