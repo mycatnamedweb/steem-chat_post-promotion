@@ -1,10 +1,10 @@
 
-// vvvvvvvvvvvvvvvvvvvvvvvvvvvv CHANGE THESE vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+// vvvvvvvvvvvvvvvvvvvvvvvvvvvv CHANGE THESE IF YOU WANT vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
 const MAX_RANDOM_DELAY_MINS = 20;
-let intro = ` Check out my post!! 😎 👇 `;
+let intro = ` Check out my post!! 😎 `;
 
-// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ CHANGE THESE ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ CHANGE THESE IF YOU WANT ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
 
@@ -70,12 +70,12 @@ const launchFutureComment = () => {
   const randomTime = Math.floor(Math.random() * (MAX_RANDOM_DELAY_MINS * 60 * 1000) - 1) + 1; // 0 to MAX_RANDOM_DELAY_MINS mins
   const moreThanTwoHours = 2 * 60 * 60 * 1000 + randomTime;
   console.log(`${now()} -- Next comment will be in ${(
-    moreThanTwoHours - randomTime) / 1000} sec + ${randomTime / 1000} sec. Link: ${promotedLink}
-
-  To change promoted link use:
-    stopCommentsWithCurrentLink();
-    startWithLink('YOUR_POST_LINK_HERE', MINS_INITIAL_DELAY_HERE_OR_NOTHING);
-
+    moreThanTwoHours - randomTime) / 1000} sec + ${randomTime / 1000} sec. Link: ${promotedLink}\n
+  If you want to change the promoted link at any time you can use:\n
+    changeLink(
+      'https://steemit.com/THIS_IS_YOUR_NEW_LINK',
+      'Hi, here is my new post!'
+    );
   `);
   timeoutRis = setTimeout(() => periodicallyCommentOnSteemChat(), moreThanTwoHours);
 }
@@ -93,10 +93,14 @@ async function periodicallyCommentOnSteemChat() {
 
 
 // startup
+if (window.location.href.indexOf('steem.chat') === -1) {
+  alert(`You gotta execute this link on a https://steem.chat domain!`);
+  throw 'NOT_ON_STEEM_CHAT';
+}
 
 async function startWithLink(link, initialDelayMins = 0, newIntro) {
   if (!link || link.indexOf('https://steemit.com') === -1) {
-    alert('Provide your sponsored link as first argument!');
+    alert('Provide a Steemit link as first argument!');
     throw new Error('NO_LINK');
   }
   promotedLink = link;
@@ -109,8 +113,13 @@ async function startWithLink(link, initialDelayMins = 0, newIntro) {
   periodicallyCommentOnSteemChat();
 }
 
-const stopCommentsWithCurrentLink = () => {
+const changeLink = (link, newIntro) => {
+  if (!link || link.indexOf('https://steemit.com') === -1) {
+    alert('Provide a Steemit link as first argument!');
+    throw new Error('NO_LINK');
+  }
   clearTimeout(timeoutRis);
+  startWithLink(link, 0, newIntro);
 }
 
 let githubW;
@@ -121,10 +130,21 @@ window.onbeforeunload = () => {
 };
 
 document['🤖'] = `
-//  stopCommentsWithCurrentLink();
-//  startWithLink(
-//   'YOUR_STEEMIT_POST_LINK_HERE',
-//   MINS_INITIAL_DELAY_HERE_OR_NOTHING,
-//   'NEW_INTRO_OR_LEAVE_EMPTY_TO_USE_DEFAULT'
-// );
+    This script automatically promotes your link every 2hs or so.
+   - TO START USE:
+     startWithLink(
+       // 👇 Your Steemit Link
+      'https://steemit.com/THIS_IS_YOUR_POST_LINK',
+      // 👇 Initial delay in minutes here or leave 0
+      0,
+      // 👇 Your post introduction. Leave blank to use the default one defined on top page.
+      'Hey guys, check out my post! 😎'
+    );
+  - AFTER A FEW HOURS OR DAYS TO CHANGE THE LINK USE:
+    changeLink(
+      // 👇 Your new Steemit link
+      'https://steemit.com/THIS_IS_YOUR_NEW_LINK',
+      // 👇 Your new post introduction. Leave blank to use the default or the one you previosly entered.
+      'Hi, here is my new post!'
+    );
 `;
