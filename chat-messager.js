@@ -2,7 +2,7 @@
 // vvvvvvvvvvvvvvvvvvvvvvvvvvvv CHANGE THESE IF YOU WANT vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
 
 const MAX_RANDOM_DELAY_MINS = 20;
-let intro = ` Check out my post!! 😎 `;
+let intro = ``;
 
 // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ CHANGE THESE IF YOU WANT ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -70,7 +70,7 @@ const launchFutureComment = () => {
   const randomTime = Math.floor(Math.random() * (MAX_RANDOM_DELAY_MINS * 60 * 1000) - 1) + 1; // 0 to MAX_RANDOM_DELAY_MINS mins
   const moreThanTwoHours = 2 * 60 * 60 * 1000 + randomTime;
   console.log(`${now()} -- Next comment will be in ${(
-    moreThanTwoHours - randomTime) / 1000} sec + ${randomTime / 1000} sec. Link: ${promotedLink}\n
+    moreThanTwoHours - randomTime) / 1000 / 60} mins + ${Math.floor(randomTime / 1000 / 60)} mins. Link: ${promotedLink}\n
   If you want to change the promoted link at any time you can use:\n
     changeLink(
       'https://steemit.com/THIS_IS_YOUR_NEW_LINK',
@@ -137,7 +137,7 @@ document['🤖'] = `
       'https://steemit.com/THIS_IS_YOUR_POST_LINK',
       // 👇 Initial delay in minutes here or leave 0
       0,
-      // 👇 Your post introduction. Leave blank to use the default one defined on top page.
+      // 👇 Your post introduction. Leave blank otherwise or change the default one on top page.
       'Hey guys, check out my post! 😎'
     );
   - AFTER A FEW HOURS OR DAYS TO CHANGE THE LINK USE:
