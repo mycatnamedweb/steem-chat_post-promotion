@@ -122,9 +122,10 @@ const changeLink = (link, newIntro) => {
     throw new Error('NO_LINK');
   }
   clearTimeout(timeoutRis);
-  const remainingDelay = (2 * 60 * 60 * 1000) - (new Date().getTime() - lastCommentTs);
-  console.log(`Your new link ${link} will be posted in ${remainingDelay / 1000 / 60} mins`);
-  startWithLink(link, remainingDelay, newIntro);
+  const remainingDelayMillis = (2 * 60 * 60 * 1000) - (new Date().getTime() - lastCommentTs);
+  const remainingDelayMins = remainingDelayMillis / 1000 / 60;
+  console.log(`Your new link ${link} will be posted in ${remainingDelayMins} mins`);
+  startWithLink(link, remainingDelayMins, newIntro);
 }
 
 let githubW;
